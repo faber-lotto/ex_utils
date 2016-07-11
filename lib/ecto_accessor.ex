@@ -76,7 +76,7 @@ defmodule ExUtils.Ecto.Accessor do
       end
 
       defoverridable [get: 1, get_by: 1, all_by: 1, all: 0, create: 1,
-                      create!: 1, join: 1, join: 2, delete: 1, delete!: 1,
+                      create!: 1, count: 0, join: 1, join: 2, delete: 1, delete!: 1,
                       delete_all: 0, update: 2, update!: 2]
     end
   end
