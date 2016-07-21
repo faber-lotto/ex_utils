@@ -20,6 +20,10 @@ defmodule ExUtils.Ecto.Accessor do
         repo_apply(:get_by, [unquote(resource), keyword])
       end
 
+      def all_by(keyword) do
+        repo_apply(:all, [(from q in unquote(resource), where: ^keyword)])
+      end
+
       def all do
         repo_apply(:all, [from entry in unquote(resource)])
       end
@@ -30,6 +34,13 @@ defmodule ExUtils.Ecto.Accessor do
 
       def delete(entry) do
         repo_apply(:delete, [entry])
+      end
+
+      def join(assoc), do: join(unquote(resource), assoc)
+      def join(query, assoc) do
+        from q in query,
+          left_join: p in assoc(q, ^assoc),
+          preload: [{^assoc, p}]
       end
 
       def delete!(entry) do
@@ -64,11 +75,9 @@ defmodule ExUtils.Ecto.Accessor do
         apply(unquote(repo), fun, args)
       end
 
-      defoverridable [get: 1, get_by: 1, all: 0, create: 1, 
-                      create!: 1, count: 0, delete: 1, delete!: 1, 
+      defoverridable [get: 1, get_by: 1, all_by: 1, all: 0, create: 1,
+                      create!: 1, count: 0, join: 1, join: 2, delete: 1, delete!: 1,
                       delete_all: 0, update: 2, update!: 2]
     end
   end
 end
-
-
