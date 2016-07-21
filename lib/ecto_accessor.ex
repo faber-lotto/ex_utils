@@ -71,13 +71,17 @@ defmodule ExUtils.Ecto.Accessor do
         repo_apply(:update!, [changeset])
       end
 
+      def last_id do
+        repo_apply(:last_id, [unquote(resource)])
+      end
+
       defp repo_apply(fun, args) do
         apply(unquote(repo), fun, args)
       end
 
       defoverridable [get: 1, get_by: 1, all_by: 1, all: 0, create: 1,
                       create!: 1, count: 0, join: 1, join: 2, delete: 1, delete!: 1,
-                      delete_all: 0, update: 2, update!: 2]
+                      delete_all: 0, update: 2, update!: 2, last_id: 0]
     end
   end
 end

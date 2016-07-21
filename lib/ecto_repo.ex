@@ -15,6 +15,12 @@ defmodule ExUtils.Ecto.Repo do
         {:ok, %{rows: [[n_rows]]}} = Ecto.Adapters.SQL.query(__MODULE__, query, [])
         n_rows
       end
+
+      def last_id(model) do
+        query = "SELECT last_value AS id FROM #{model.__schema__(:source)}_id_seq"
+        {:ok, %{rows: [[last_id]]}} = Ecto.Adapters.SQL.query(__MODULE__, query, [])
+        last_id
+      end
     end
   end
 end
