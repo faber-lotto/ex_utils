@@ -23,15 +23,15 @@ defmodule ExUtils.Ecto.Repo do
         last_id
       end
 
-      def import_csv(model, path) do
+      def import_csv(model, path, options \\ []) do
         file = File.open!(path, [:read])
         fields = IO.read(file, :line) |> String.slice(0..-2)
         File.close path
         table = table model
         query = ~s(COPY #{table}\(#{fields}\) FROM '#{path}' DELIMITER ',' CSV HEADER)
-        response = Ecto.Adapters.SQL.query(__MODULE__, query, [])
+        response = Ecto.Adapters.SQL.query(__MODULE__, query, [], options)
         query = ~s(SELECT setval\('#{table}_id_seq', COALESCE\(\(SELECT MAX\(id\)+1 FROM #{table}\), 1\), false\))
-        Ecto.Adapters.SQL.query(__MODULE__, query, [])
+        Ecto.Adapters.SQL.query(__MODULE__, query, [], options)
         response
       end
 

@@ -75,8 +75,8 @@ defmodule ExUtils.Ecto.Accessor do
         repo_apply(:last_id, [unquote(resource)])
       end
 
-      def import_csv(path) do
-        repo_apply(:import_csv, [unquote(resource), path])
+      def import_csv(path, options \\ []) do
+        repo_apply(:import_csv, [unquote(resource), path, options])
       end
 
       defp repo_apply(fun, args) do
