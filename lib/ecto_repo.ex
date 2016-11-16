@@ -1,7 +1,7 @@
 defmodule ExUtils.Ecto.Repo do
- @moduledoc """
- Temporarily contains postgres repo functions which are not yet available in Ecto.
- """
+  @moduledoc """
+  Temporarily contains postgres repo functions which are not yet available in Ecto.
+  """
 
   defmacro __using__(otp_app: otp_app) do
     quote do
