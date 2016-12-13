@@ -60,8 +60,9 @@ defmodule ExUtils.ReleaseTasks do
       end
     
       defp repo_dir(repo) do
-        [_ , repo_dir] = Macro.underscore(repo) |> String.split("/")
-        repo_dir
+        Macro.underscore(repo)
+        |> String.split("/")
+        |> List.last
       end
     end
   end
