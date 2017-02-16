@@ -25,9 +25,9 @@ defmodule ExUtils.Ecto.Repo do
 
       def import_csv(model, path, options \\ []) do
         file = File.open!(path, [:read])
-        fields = IO.read(file, :line) 
-        |> String.slice(0..-2) |> String.split(",") 
-        |> Enum.map(fn(s) -> "\"" <> s <> "\"" end) 
+        fields = IO.read(file, :line)
+        |> String.slice(0..-2) |> String.split(",")
+        |> Enum.map(fn(s) -> "\"" <> s <> "\"" end)
         |> Enum.join(",")
         File.close path
         table = table(model)
@@ -44,9 +44,7 @@ defmodule ExUtils.Ecto.Repo do
           {:ok, %Postgrex.Result{num_rows: 1}} ->
             query = ~s(SELECT setval\('"#{table}_id_seq"', COALESCE\(\(SELECT MAX\(id\)+1 FROM "#{table}"\), 1\), false\))
             Ecto.Adapters.SQL.query!(__MODULE__, query, [], options)
-          _ -> 
-            IO.puts "Warning: unable to find and set id-sequence for table #{table}."
-            nil
+          _ -> nil
         end
       end
 
