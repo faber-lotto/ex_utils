@@ -25,17 +25,27 @@ defmodule ExUtils.Ecto.Repo do
 
       def import_csv(model, path, options \\ []) do
         file = File.open!(path, [:read])
-        fields = IO.read(file, :line) 
-        |> String.slice(0..-2) |> String.split(",") 
-        |> Enum.map(fn(s) -> "\"" <> s <> "\"" end) 
+        fields = IO.read(file, :line)
+        |> String.slice(0..-2) |> String.split(",")
+        |> Enum.map(fn(s) -> "\"" <> s <> "\"" end)
         |> Enum.join(",")
         File.close path
         table = table(model)
         query = ~s(COPY "#{table}"\(#{fields}\) FROM '#{path}' DELIMITER ',' CSV HEADER)
         response = Ecto.Adapters.SQL.query(__MODULE__, query, [], options)
-        query = ~s(SELECT setval\('"#{table}_id_seq"', COALESCE\(\(SELECT MAX\(id\)+1 FROM "#{table}"\), 1\), false\))
-        Ecto.Adapters.SQL.query(__MODULE__, query, [], options)
+        set_table_id_seq(table, options)
         response
+      end
+
+      defp set_table_id_seq(table, options) do
+        #check if sequence exists
+        query = ~s(SELECT * FROM information_schema.sequences WHERE sequence_name = '#{table}_id_seq' and sequence_catalog = current_database\(\))
+        case Ecto.Adapters.SQL.query(__MODULE__, query, [], options) do
+          {:ok, %Postgrex.Result{num_rows: 1}} ->
+            query = ~s(SELECT setval\('"#{table}_id_seq"', COALESCE\(\(SELECT MAX\(id\)+1 FROM "#{table}"\), 1\), false\))
+            Ecto.Adapters.SQL.query!(__MODULE__, query, [], options)
+          _ -> nil
+        end
       end
 
       defp table(model) do
