@@ -19,6 +19,6 @@ defmodule ExUtils.Mixfile do
   defp elixirc_paths(_),     do: ["lib"]
 
   defp deps do
-    [{:poison, "~> 2.1"}]
+    [{:poison, ">= 2.1.0"}]
   end
 end
