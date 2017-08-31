@@ -29,7 +29,7 @@ defmodule ExUtils.Ecto.Repo do
         |> String.slice(0..-2) |> String.split(",")
         |> Enum.map(fn(s) -> "\"" <> s <> "\"" end)
         |> Enum.join(",")
-        File.close path
+        File.close file
         table = table(model)
         query = ~s(COPY "#{table}"\(#{fields}\) FROM '#{path}' DELIMITER ',' CSV HEADER)
         response = Ecto.Adapters.SQL.query(__MODULE__, query, [], options)
