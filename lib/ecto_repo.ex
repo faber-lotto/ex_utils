@@ -42,7 +42,9 @@ defmodule ExUtils.Ecto.Repo do
         query = ~s(SELECT * FROM information_schema.sequences WHERE sequence_name = '#{table}_id_seq' and sequence_catalog = current_database\(\))
         case Ecto.Adapters.SQL.query(__MODULE__, query, [], options) do
           {:ok, %Postgrex.Result{num_rows: 1}} ->
-            query = ~s(SELECT setval\('"#{table}_id_seq"', COALESCE\(\(SELECT MAX\(id\) FROM "#{table}"\), 0\), true\))
+            query = """
+              SELECT setval('"#{table}_id_seq"', COALESCE((SELECT MAX(id) FROM "#{table}"), 1), (SELECT MAX(id) IS NOT NULL FROM "#{table}"))
+            """
             Ecto.Adapters.SQL.query!(__MODULE__, query, [], options)
           _ -> nil
         end
