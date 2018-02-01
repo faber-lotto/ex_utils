@@ -3,8 +3,8 @@ defmodule ExUtils.Mixfile do
 
   def project do
     [app: :ex_utils,
-     version: "0.0.4",
-     elixir: "~> 1.2",
+     version: "0.0.5",
+     elixir: "~> 1.4",
      elixirc_paths: elixirc_paths(Mix.env),
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
@@ -19,6 +19,6 @@ defmodule ExUtils.Mixfile do
   defp elixirc_paths(_),     do: ["lib"]
 
   defp deps do
-    [{:poison, ">= 2.1.0"}]
+    [{:poison, ">= 3.1.0"}]
   end
 end

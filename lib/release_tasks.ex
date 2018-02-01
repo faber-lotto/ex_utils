@@ -15,11 +15,10 @@ defmodule ExUtils.ReleaseTasks do
           case repo.__adapter__.storage_up(repo.config) do
             :ok ->
               IO.puts "The database for #{repo} has been created"
-              :timer.sleep 30_000
-              migrate_repo(repo, version, tags, migration_path)
+              migrate_repo(repo, tags[version][repo], migration_path)
             {:error, :already_up} ->
               IO.puts "The database for #{repo} has already been created"
-              migrate_repo(repo, version, tags, migration_path)
+              migrate_repo(repo, tags[version][repo], migration_path)
             {:error, term} when is_binary(term) ->
               raise "The database for #{repo} couldn't be created: #{term}"
             {:error, term} ->
@@ -38,23 +37,19 @@ defmodule ExUtils.ReleaseTasks do
         |> List.first
       end
     
-      defp direction(repo, version, tags) do
+      defp direction(repo, target_state) do
         current_state = (Ecto.Migrator.migrated_versions(repo) |> List.last) || 0
-        target_state = tags[version][repo] || 0
         cond do
-          current_state == target_state ->
-            nil
-          current_state > target_state ->
-            :down
-          current_state < target_state ->
-            :up
+          target_state == nil -> nil
+          current_state == target_state -> nil
+          current_state > target_state -> :down
+          current_state < target_state -> :up
         end
       end
     
-      defp migrate_repo(repo, version, tags, path) do
-        target_state = tags[version][repo] || 0
-        direction = direction(repo, version, tags)
-        if direction do
+      defp migrate_repo(repo, nil, path), do: nil
+      defp migrate_repo(repo, target_state, path) do
+        if direction = direction(repo, target_state) do
           Ecto.Migrator.run(repo, path, direction, to: target_state + 0.1)
         end
       end
