@@ -39,6 +39,8 @@ defmodule ExUtils.ReleaseTasks do
     
       defp direction(repo, target_state) do
         current_state = (Ecto.Migrator.migrated_versions(repo) |> List.last) || 0
+        IO.puts "current_state = #{inspect current_state}"
+        IO.puts "target_state = #{inspect target_state}"
         cond do
           target_state == nil -> nil
           current_state == target_state -> nil
@@ -50,6 +52,7 @@ defmodule ExUtils.ReleaseTasks do
       defp migrate_repo(repo, nil, path), do: nil
       defp migrate_repo(repo, target_state, path) do
         if direction = direction(repo, target_state) do
+          IO.puts "migrating #{inspect repo} in direction #{inspect direction}"
           Ecto.Migrator.run(repo, path, direction, to: target_state + 0.1)
         end
       end
