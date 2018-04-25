@@ -31,10 +31,20 @@ defmodule ExUtils.ReleaseTasks do
         migrate(app, last_version(tags), tags)
       end
     
-      defp last_version(tags) do
+      def last_version(tags) do
         Map.keys(tags)
-        |> Enum.sort(&(&1 > &2))
+        |> Enum.sort(&(version_index(&1) > version_index(&2)))
         |> List.first
+      end
+
+      defp version_index(version_string) do
+        version_string 
+        |> String.split(".") 
+        |> Enum.map_reduce(3, fn(x, acc) -> 
+          {String.to_integer(x) * :math.pow(1000, acc), acc - 1} 
+        end) 
+        |> elem(0) 
+        |> Enum.sum()
       end
     
       defp direction(repo, target_state) do
