@@ -3,10 +3,10 @@ defmodule ExUtils.Ecto.Repo do
   Temporarily contains postgres repo functions which are not yet available in Ecto.
   """
 
-  defmacro __using__(otp_app: otp_app) do
+  defmacro __using__(otp_app: otp_app, adapter: adapter) do
     quote do
       import ExUtils.Ecto.Repo
-      use Ecto.Repo, otp_app: unquote(otp_app)
+      use Ecto.Repo, otp_app: unquote(otp_app), adapter: unquote(adapter)
 
       @doc """
       Count the number of records in the model table
