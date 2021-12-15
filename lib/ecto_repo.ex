@@ -26,12 +26,12 @@ defmodule ExUtils.Ecto.Repo do
       def import_csv(model, path, options \\ []) do
         file = File.open!(path, [:read])
         fields = IO.read(file, :line)
-        |> String.slice(0..-2) |> String.split(",")
+        |> String.slice(0..-2) |> String.split(Keyword.get(options, :separator, ","))
         |> Enum.map(fn(s) -> "\"" <> s <> "\"" end)
         |> Enum.join(",")
         File.close file
         table = table(model)
-        query = ~s(COPY "#{table}"\(#{fields}\) FROM '#{path}' DELIMITER ',' CSV HEADER)
+        query = ~s(COPY "#{table}"\(#{fields}\) FROM '#{path}' DELIMITER '#{Keyword.get(options, :separator, ",")}' CSV HEADER)
         response = Ecto.Adapters.SQL.query(__MODULE__, query, [], options)
         set_table_id_seq(table, options)
         response
