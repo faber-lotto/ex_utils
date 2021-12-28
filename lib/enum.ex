@@ -38,6 +38,10 @@ defmodule ExUtils.Enum do
 
       def allowed_items(), do: []
 
+      def equal?(value1, value2), do: String.downcase(value1) == String.downcase(value2)
+
+      def embed_as(format), do: :self
+
       defoverridable [allowed_items: 0]
     end
   end
