@@ -38,7 +38,7 @@ defmodule ExUtils.Enum do
 
       def allowed_items(), do: []
 
-      def equal?(value1, value2), do: String.downcase(value1) == String.downcase(value2)
+      def equal?(value1, value2), do: value1 == value2
 
       def embed_as(format), do: :self
 
