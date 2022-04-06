@@ -79,13 +79,17 @@ defmodule ExUtils.Ecto.Accessor do
         repo_apply(:import_csv, [unquote(resource), path, options])
       end
 
+      def table do
+        unquote(resource).__schema__(:source)
+      end
+
       defp repo_apply(fun, args) do
         apply(unquote(repo), fun, args)
       end
 
       defoverridable [get: 1, get_by: 1, all_by: 1, all: 0, create: 1,
                       create!: 1, count: 0, join: 1, join: 2, delete: 1, delete!: 1,
-                      delete_all: 0, update: 2, update!: 2, last_id: 0, import_csv: 1]
+                      delete_all: 0, update: 2, update!: 2, last_id: 0, import_csv: 1, table: 0]
     end
   end
 end
