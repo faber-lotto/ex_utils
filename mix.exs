@@ -5,7 +5,7 @@ defmodule ExUtils.MixProject do
     [
       app: :ex_utils,
       version: "2.0.1",
-      elixir: "~> 1.13.0",
+      elixir: ">= 1.13.0",
       elixirc_paths: elixirc_paths(Mix.env),
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
@@ -24,8 +24,8 @@ defmodule ExUtils.MixProject do
 
   defp deps() do
     [
-      {:poison, "~> 5.0.0"},
-      {:ecto_sql, "~> 3.7.0"},
+      {:poison, ">= 5.0.0"},
+      {:ecto_sql, ">= 3.7.0"},
     ]
   end
 end
