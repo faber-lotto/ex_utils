@@ -4,7 +4,7 @@ defmodule ExUtils.MixProject do
   def project do
     [
       app: :ex_utils,
-      version: "2.0.1",
+      version: "2.0.2",
       elixir: ">= 1.13.0",
       elixirc_paths: elixirc_paths(Mix.env),
       build_embedded: Mix.env() == :prod,
